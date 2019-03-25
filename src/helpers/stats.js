@@ -15,8 +15,11 @@ const {Comment, Image} = require('../models');
             _id: '1',
             viewsTotal: {$sum: '$views'}
         }}]);
-        
-        return result[0].viewsTotal;
+        let viewsTotal = o;
+        if(result.length > 0){
+            viewsTotal += result[0].viewsTotal;
+        }
+        return viewsTotal;
     }
 
     async function likesTotalCounter(){
@@ -26,7 +29,12 @@ const {Comment, Image} = require('../models');
             likesTotal: {$sum: '$likes'}
         }}]);
 
-        return result[0].likesTotal;
+        let likesTotal = 0;
+        if(result.length > 0){
+            likesTotal += result[0].likesTotal;
+        }
+
+        return likesTotal;
     }
 
 module.exports = async () =>{
@@ -37,7 +45,7 @@ module.exports = async () =>{
         imageTotalViewsCounter(),
         likesTotalCounter()
 
-    ])
+    ]);
 
     return {
         images: results[0],
